@@ -3,11 +3,17 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { HashRouter } from "react-router-dom";
+import { ToastContainer } from 'react-toastify'; //ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; //CSS Style
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <HashRouter>
+      <App />
+      <ToastContainer/>
+    </HashRouter>
   </React.StrictMode>
 );
 
