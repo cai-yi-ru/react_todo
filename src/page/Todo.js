@@ -27,7 +27,6 @@ function Todo() {
     useEffect(() => {
         setIsLoading(true)
         if(token){
-            console.log('執行');
             getTodoList();
             setIsLoading(false)
         }
@@ -87,12 +86,15 @@ function Todo() {
             }
         }
         if(token){
+            setIsLoading(true)
             await axios.post('https://todoo.5xcamp.us/todos',body).then(res => {
                 Toast('新增成功','success')
                 getTodoList()
                 setNewTodo('') 
+                setIsLoading(false)
             }).catch(err=>{
                 Toast(err.response.data.message,'error')
+                setIsLoading(false)
             })
         }
     }
@@ -115,11 +117,14 @@ function Todo() {
     /** 刪除TODO */
     const deleteTodo = async(id) =>{
         if(token){
+            setIsLoading(true)
             await axios.delete(`https://todoo.5xcamp.us/todos/${id}`).then(res => {
                 Toast(res.data.message,'success')
                 getTodoList()
+                setIsLoading(false)
             }).catch(err=>{
                 Toast(err.response.data.message,'error')
+                setIsLoading(false)
             })
         }
     }
