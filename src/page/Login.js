@@ -6,36 +6,34 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useAuth } from "../components/AuthContext";
-import { toast } from 'react-toastify';
+import Cookies from 'universal-cookie'
+import Toast  from "../lib/Toast";
 
 function Login() {
+    //cookie
+    const cookies = new Cookies();
     const { register,handleSubmit,formState: { errors },reset } = useForm();
     const { setToken } = useAuth();
     const navigate = useNavigate();
 
     /**登入按鈕  */
-    const onSubmitEvent = (data) => {
+    const onSubmitEvent = async(data) => {
         const body={
             user:data
         }
-        axios.post('https://todoo.5xcamp.us/users/sign_in', body).then(res => {
+        await axios.post('https://todoo.5xcamp.us/users/sign_in', body).then(res => {
 
             if(res.data.message ==='登入成功'){
                 const getToken = res.headers.authorization
+                const nickName = res.data.nickname
+                cookies.set('token', getToken)
+                sessionStorage.setItem('nickName', nickName);
                 setToken(getToken)
-                toast.success(res.data.message,{
-                    position: "top-center",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
-                navigate('/todo')
+                Toast(res.data.message,'success')
+                navigate('/')
             }
         }).catch(err=>{
-            toast.error(err.response.data.message);
+            Toast(err.response.data.message,'error')
             reset()
         })
     }

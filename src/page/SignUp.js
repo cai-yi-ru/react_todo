@@ -5,28 +5,37 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useAuth } from "../components/AuthContext";
+import Cookies from 'universal-cookie'
+import Toast  from "../lib/Toast";
+
 function SignUp() {
+    //cookie
+    const cookies = new Cookies();
     const { register,handleSubmit,formState: { errors },reset } = useForm();
     const { token,setToken } = useAuth();
     const navigate = useNavigate();
     useEffect(() => {
         if(token !==null){
             console.log(`已有token`);
-            navigate('/todo')
+            navigate('/')
         }
     }, [navigate, token]);
-    
-    const onSubmitEvent = (data) => {
+    /** 註冊按鈕 */
+    const onSubmitEvent = async(data) => {
+        if(data.password !==data.pwdagain) return Toast('密碼與再次輸入密碼不相同','error')
         const body={
             user:data
         }
-        axios.post('https://todoo.5xcamp.us/users', body).then(res => {
+        await axios.post('https://todoo.5xcamp.us/users', body).then(res => {
             const getToken = res.headers.authorization
+            cookies.set('token', getToken)
+            const nickName = res.data.nickname
+            sessionStorage.setItem('nickName', nickName);
             setToken(getToken)
-        //   alert(`回傳結果：${JSON.stringify(res.data)}`);
+            Toast(res.data.message,'success')
+            navigate('/')
         }).catch(err=>{
-            console.log(err.response.data.message);
-            console.log(err.response.data.error[0]);
+            Toast(err.response.data.error[0],'error')
             reset()
         })
     }
@@ -53,7 +62,7 @@ function SignUp() {
                     {errors.email && errors.email.type === "pattern" && <span style={{color:"red"}}>不符合 Email 規則</span> }
                     <label className="formControls_label" htmlFor="nickName">您的暱稱</label>
                     <input className="formControls_input" type="text" name="nickName" id="nickName" placeholder="請輸入您的暱稱"
-                    {...register("nickName", { required: { value: true, message: "請輸入您的暱稱" } })}
+                    {...register("nickname", { required: { value: true, message: "請輸入您的暱稱" } })}
                     />
                     {<span style={{color:"red"}}>{errors.nickName?.message}</span>}
                     <label className="formControls_label" htmlFor="pwd">密碼</label>
