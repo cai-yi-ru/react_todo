@@ -189,8 +189,8 @@ function Todo() {
                                                     <input className="todoList_input" type="checkbox" value={todo.content} checked={todo.completed_at!==null? true:false } onChange={()=>{onChange(todo.id)}}/>
                                                     <span>{todo.content}</span>
                                                 </label>
-                                                <a href="#">
-                                                    <FaTimesCircle onClick={()=>{deleteTodo(todo.id)}}/>
+                                                <a href="#" onClick={()=>{deleteTodo(todo.id)}}>
+                                                    <FaTimesCircle />
                                                 </a>
                                             </li>
                                         ):'目前尚無代辦事項'

@@ -78,7 +78,7 @@ function SignUp() {
                     {errors.pwdagain && errors.pwdagain.type === "required" && <span style={{color:"red"}}>此欄位必填</span>}
                     {errors.pwdagain && errors.pwdagain.type === "minLength" && <span style={{color:"red"}}>密碼至少為 8 碼</span> }
                     <input className="formControls_btnSubmit" type="submit" value="註冊帳號"/>
-                    <a className="formControls_btnLink" onClick={loginButton}>登入</a>
+                    <a href="#/login" className="formControls_btnLink" onClick={loginButton}>登入</a>
                 </form>
             </div>
         </div>
